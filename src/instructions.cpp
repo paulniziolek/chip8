@@ -2,7 +2,7 @@
 
 // 0nnn - SYS addr
 // Jump to a machine code routine at nnn.
-
+// *DEPRECATED* on modern interpreters
 
 // 00E0 - CLS
 // Clear the display.
