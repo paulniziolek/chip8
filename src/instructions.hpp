@@ -1,3 +1,6 @@
+#ifndef INSTRUCTIONS_HPP
+#define INSTRUCTIONS_HPP
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -40,3 +43,5 @@ void set_I_S(Chip8* sys);           // Fx29
 void ld_B_Vx(Chip8* sys);           // Fx33
 void ld_I_Vk(Chip8* sys);           // Fx55
 void ld_Vk_I(Chip8* sys);           // Fx65
+
+#endif

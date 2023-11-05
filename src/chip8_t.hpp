@@ -1,12 +1,19 @@
-#include <stdint.h>
+#ifndef CHIP8_T_HPP
+#define CHIP8_T_HPP
 
 #define MEMORY_SIZE 4096
 #define STACK_SIZE 16
 #define NUM_OF_V_REGISTERS 16
-#define RAMstart 0x200 // 512
+#define PC_START 0x200 // 512
 #define FONTSET_SIZE 80
 
-uint8_t fontset[FONTSET_SIZE] = {
+#define NUM_KEYS 16
+#define SCREEN_WIDTH 64
+#define SCREEN_HEIGHT 32
+
+#include <stdint.h>
+
+constexpr uint8_t fontset[FONTSET_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -44,4 +51,46 @@ public:
 
     uint16_t current_op;
 
+    // screen
+    uint8_t screen[SCREEN_HEIGHT][SCREEN_WIDTH];
+
+    // keyboard
+    // ...
+
+    // Status Flags
+    uint8_t is_running_flag;
+    uint8_t is_paused_flag;
+
+    // Chip8 initializer
+    Chip8() {
+        // clear RAM
+        for (int i=0; i < MEMORY_SIZE; i++) {
+            ram[i] = 0;
+        }
+        
+        // load fontset
+        for (int i = 0; i < FONTSET_SIZE; i++) {
+            ram[i] = fontset[i];
+        }
+
+        // clear registers
+        for (int i=0; i < NUM_OF_V_REGISTERS; i++) {
+            V[i] = 0;
+        }
+        I = 0;
+        PC = PC_START;
+        DT = 0;
+        ST = 0;
+        
+        // clear stack
+        for (int i=0; i < STACK_SIZE; i++) {
+            stack[i] = 0;
+        }
+        SP = 0;
+
+        is_running_flag = 1;
+        is_paused_flag = 0;
+    }
 };
+
+#endif
