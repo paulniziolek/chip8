@@ -7,8 +7,11 @@
 // 00E0 - CLS
 // Clear the display.
 void cls(Chip8* sys) {
-    // TODO
-
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        for (int j = 0; j < SCREEN_WIDTH; j++) {
+            sys->screen[i][j] = 0;
+        }
+    }
 }
 
 // 00EE - RET
