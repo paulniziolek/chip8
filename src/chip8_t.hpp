@@ -88,6 +88,13 @@ public:
         }
         SP = 0;
 
+        // clear screen
+        for (int i=0; i < SCREEN_HEIGHT; i++) {
+            for (int j=0; j < SCREEN_WIDTH; j++) {
+                screen[i][j] = 0;
+            }
+        }
+
         is_running_flag = 1;
         is_paused_flag = 0;
     }

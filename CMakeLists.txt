@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 project(chip8 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,11 +10,14 @@ if(NOT TARGET spdlog)
     find_package(spdlog REQUIRED)
 endif()
 
+find_package(SDL2 REQUIRED)
+
 # TODO: include UT testing framework
 
 # directories
 include_directories(src)
 include_directories(tests)
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # exec
 add_executable(chip8 src/main.cpp src/chip8.cpp src/instructions.cpp src/screen.cpp)
@@ -22,6 +25,7 @@ add_executable(chip8 src/main.cpp src/chip8.cpp src/instructions.cpp src/screen.
 
 # link
 target_link_libraries(chip8 PRIVATE spdlog::spdlog)
+target_link_libraries(chip8 PRIVATE ${SDL2_LIBRARIES})
 #target_link_options(chip8 PRIVATE -v)
 
 # unit tests

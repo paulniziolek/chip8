@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 #include "chip8_t.hpp"
 #include "instructions.hpp"
+#include "screen.hpp"
 
 void init_chip8(Chip8* sys);
 void load_rom(Chip8* sys, const char* rom_filepath);
