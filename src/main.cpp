@@ -4,16 +4,20 @@
 
 int main(int argc, char *argv[]) {
     Chip8 user_chip8;
-
-    // TODO: init logger setup here
-    
-    // TODO: load rom here
     argv[1] = "roms/ultimatetictactoe.ch8"; // temp, just for testing
+    argv[2] = "log"; // temp, just for testing
+
+    if (argv[2] != NULL && strcmp(argv[2], "log")==0) {
+        spdlog::set_level(spdlog::level::debug);
+    }
+
     const char* rompath = argv[1];
     if (rompath == NULL) {
-        // log out usage
+        spdlog::error("ROM Path not specified.");
+        spdlog::warn("Usage: ./chip8 romdir/rom");
         exit(EXIT_FAILURE);
     }
+
     load_rom(&user_chip8, rompath);
 
     // TODO: CPU clockcycle debugging here
