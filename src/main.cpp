@@ -57,7 +57,6 @@ int main(int argc, char *argv[]) {
     while(user_chip8.is_running_flag) {
         execute_instruction(&user_chip8);
 
-        user_chip8.screen[15][15] = 1; // test
         if (user_chip8.draw_flag) {
             drawScreen(&user_chip8, renderer);
         }
