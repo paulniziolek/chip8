@@ -12,6 +12,8 @@ void cls(Chip8* sys) {
             sys->screen[i][j] = 0;
         }
     }
+
+    sys->PC += 2;
 }
 
 // 00EE - RET
@@ -22,6 +24,8 @@ void ret(Chip8* sys) {
     // TODO: prevent segfault with validation
     sys->PC = sys->stack[sys->SP];
     sys->SP -= 1;
+
+    sys->PC += 2;
 }
 
 // 1nnn - JP addr
@@ -57,6 +61,8 @@ void se_Vx_kk(Chip8* sys) {
     if (sys->V[x] == kk) {
         sys->PC += 2;
     }
+
+    sys->PC += 2;
 }
 
 // 4xkk - SNE Vx, byte
@@ -70,6 +76,8 @@ void sne_Vx_kk(Chip8* sys) {
     if (sys->V[x] != kk) {
         sys->PC += 2;
     }
+
+    sys->PC += 2;
 }
 
 // 5xy0 - SE Vx, Vy
@@ -83,6 +91,8 @@ void se_Vx_Vy(Chip8* sys) {
     if (sys->V[x] == sys->V[y]) {
         sys->PC += 2;
     }
+
+    sys->PC += 2;
 }
 
 // 6xkk - LD Vx, byte
@@ -94,6 +104,8 @@ void ld_Vx_kk(Chip8* sys) {
     uint8_t kk = sys->current_op & 0x00FF;
 
     sys->V[x] = kk;
+
+    sys->PC += 2;
 }
 
 // 7xkk - ADD Vx, byte
@@ -105,6 +117,8 @@ void add_Vx_kk(Chip8* sys) {
     uint8_t kk = sys->current_op & 0x00FF;
 
     sys->V[x] += kk;
+
+    sys->PC += 2;
 }
 
 // 8xy0 - LD Vx, Vy
@@ -116,6 +130,8 @@ void ld_Vx_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[y];
+
+    sys->PC += 2;
 }
 
 // 8xy1 - OR Vx, Vy
@@ -128,6 +144,8 @@ void set_Vx_or_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] | sys->V[y];
+
+    sys->PC += 2;
 }
 
 // 8xy2 - AND Vx, Vy
@@ -140,6 +158,8 @@ void set_Vx_and_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] & sys->V[y];
+
+    sys->PC += 2;
 }
 
 // 8xy3 - XOR Vx, Vy
@@ -152,6 +172,8 @@ void set_Vx_xor_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] ^ sys->V[y];
+
+    sys->PC += 2;
 }
 
 // 8xy4 - ADD Vx, Vy
@@ -166,6 +188,8 @@ void add_Vx_Vy(Chip8* sys) {
     uint16_t sum = sys->V[x] + sys->V[y];
     sys->V[0xF] = sum > 255 ? 1 : 0;
     sys->V[x] = sum & 0xFF;
+
+    sys->PC += 2;
 }
 
 // 8xy5 - SUB Vx, Vy
@@ -178,6 +202,8 @@ void sub_Vx_Vy(Chip8* sys) {
 
     sys->V[0xF] = sys->V[x] > sys->V[y] ? 1 : 0;
     sys->V[x] -= sys->V[y];
+
+    sys->PC += 2;
 }
 
 // 8xy6 - SHR Vx {, Vy}
@@ -189,6 +215,8 @@ void shr_Vx_Vy(Chip8* sys) {
 
     sys->V[0xF] = sys->V[x] & (1);
     sys->V[x] = sys->V[x] >> 1;
+
+    sys->PC += 2;
 }
 
 // 8xy7 - SUBN Vx, Vy
@@ -201,6 +229,8 @@ void subn_Vx_Vy(Chip8* sys) {
 
     sys->V[0xF] = (sys->V[y] > sys->V[x]) ? 1 : 0;
     sys->V[x] = sys->V[y] - sys->V[x];
+
+    sys->PC += 2;
 }
 
 // 8xyE - SHL Vx {, Vy}
@@ -212,6 +242,8 @@ void shl(Chip8* sys) {
 
     sys->V[0xF] = (sys->V[x] & 0x80) >> 7;
     sys->V[x] = (sys->V[x] << 1);
+
+    sys->PC += 2;
 }
 
 // 9xy0 - SNE Vx, Vy
@@ -225,6 +257,8 @@ void sne_Vx_Vy(Chip8* sys) {
     if (sys->V[x] == sys->V[y]) {
         sys->PC += 2;
     }
+
+    sys->PC += 2;
 }
 
 // Annn - LD I, addr
@@ -235,6 +269,8 @@ void set_i(Chip8* sys) {
     uint16_t nnn = sys->current_op & 0x0FFF;
 
     sys->I = nnn;
+
+    sys->PC += 2;
 }
 
 // Bnnn - JP V0, addr
@@ -256,6 +292,8 @@ void set_Vx_rand(Chip8* sys) {
     uint8_t kk = sys->current_op & 0x00FF;
 
     sys->V[x] = (rand() % 256) & kk;
+
+    sys->PC += 2;
 }
 
 // Dxyn - DRW Vx, Vy, nibble
@@ -284,6 +322,8 @@ void draw(Chip8* sys) {
             }
         }
     }
+
+    sys->PC += 2;
 }
 
 // Ex9E - SKP Vx
@@ -293,6 +333,7 @@ void draw(Chip8* sys) {
 void skp(Chip8* sys) {
     // TODO
 
+    sys->PC += 2;
 }
 
 // ExA1 - SKNP Vx
@@ -301,6 +342,8 @@ void skp(Chip8* sys) {
 // Checks the keyboard, and if the key corresponding to the value of Vx is currently in the up position, PC is increased by 2.
 void skpn(Chip8* sys) {
     // TODO
+
+    sys->PC += 2;
 }
 
 // Fx07 - LD Vx, DT
@@ -311,6 +354,8 @@ void ld_DT_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
     sys->V[x] = sys->DT;
+
+    sys->PC += 2;
 }
 
 // Fx0A - LD Vx, K
@@ -320,6 +365,7 @@ void ld_DT_Vx(Chip8* sys) {
 void set_K_Vx(Chip8* sys) {
     // TODO
 
+    sys->PC += 2;
 }
 
 // Fx15 - LD DT, Vx
@@ -330,6 +376,8 @@ void set_DT_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
     sys->DT = sys->V[x];
+
+    sys->PC += 2;
 }
 
 // Fx18 - LD ST, Vx
@@ -340,6 +388,8 @@ void set_ST_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
     sys->ST = sys->V[x];
+
+    sys->PC += 2;
 }
 
 // Fx1E - ADD I, Vx
@@ -350,6 +400,8 @@ void add_I_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
     sys->I += sys->V[x];
+
+    sys->PC += 2;
 }
 
 // Fx29 - LD F, Vx
@@ -359,6 +411,7 @@ void add_I_Vx(Chip8* sys) {
 void set_I_S(Chip8* sys) {
     // TODO
 
+    sys->PC += 2;
 }
 
 // Fx33 - LD B, Vx
@@ -371,6 +424,8 @@ void ld_B_Vx(Chip8* sys) {
     sys->ram[sys->I] = sys->V[x] / 100;
     sys->ram[sys->I + 1] = (sys->V[x] / 10) % 10;
     sys->ram[sys->I + 2] = (sys->V[x] % 100) % 10;
+
+    sys->PC += 2;
 }
 
 // Fx55 - LD [I], Vx
@@ -383,7 +438,8 @@ void ld_I_Vk(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->ram[sys->I + i] = sys->V[i];
     }
-    
+
+    sys->PC += 2;
     // Q: do i register change for this and next opcode?
 }
 
@@ -398,5 +454,6 @@ void ld_Vk_I(Chip8* sys) {
         sys->V[i] = sys->ram[sys->I + i];
     }
 
+    sys->PC += 2;
     // Q: do i register change for this and prev opcode?
 }

@@ -196,8 +196,6 @@ void execute_instruction(Chip8* sys) {
         }
         break;
     }
-    // move to next instruction:
-    sys->PC += 2;
 }
 
 void printMemory(Chip8* sys) {
