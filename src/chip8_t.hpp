@@ -52,7 +52,7 @@ public:
     uint16_t current_op;
 
     // screen
-    uint8_t screen[SCREEN_HEIGHT][SCREEN_WIDTH];
+    uint8_t screen[SCREEN_WIDTH][SCREEN_HEIGHT];
 
     // keyboard
     // ...
@@ -60,6 +60,7 @@ public:
     // Status Flags
     uint8_t is_running_flag;
     uint8_t is_paused_flag;
+    uint8_t draw_flag;
 
     // Chip8 initializer
     Chip8() {
@@ -89,14 +90,15 @@ public:
         SP = 0;
 
         // clear screen
-        for (int i=0; i < SCREEN_HEIGHT; i++) {
-            for (int j=0; j < SCREEN_WIDTH; j++) {
-                screen[i][j] = 0;
+        for (int y=0; y < SCREEN_HEIGHT; y++) {
+            for (int x=0; x < SCREEN_WIDTH; x++) {
+                screen[x][y] = 0;
             }
         }
 
         is_running_flag = 1;
         is_paused_flag = 0;
+        draw_flag = 1;
     }
 };
 
