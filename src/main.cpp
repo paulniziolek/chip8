@@ -1,6 +1,7 @@
 // testing main cpp file
 #include "chip8.hpp"
 #include "screen.hpp"
+#include "keyboard.hpp"
 
 int main(int argc, char *argv[]) {
     Chip8 user_chip8;
@@ -58,16 +59,12 @@ int main(int argc, char *argv[]) {
     while(user_chip8.is_running_flag) {
 
         execute_instruction(&user_chip8);
-
         SDL_Event event;
-        SDL_PollEvent(&event);
-
-        // TODO: process_user_input()
-        while (user_chip8.is_paused_flag) {
-            // process_user_input
+        process_user_input(&user_chip8);
+        while (user_chip8.is_paused_flag && user_chip8.is_running_flag) {
+            process_user_input(&user_chip8);
         }
 
-        
     }
     
     SDL_DestroyRenderer(renderer);
