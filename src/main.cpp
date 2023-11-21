@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]) {
     Chip8 user_chip8;
     argv[1] = "roms/ultimatetictactoe.ch8"; // temp, just for testing
-    //argv[2] = "log"; // temp, just for testing
+    argv[2] = "log"; // temp, just for testing
 
     if (argv[2] != NULL && strcmp(argv[2], "log")==0) {
         spdlog::set_level(spdlog::level::debug);
@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
     SDL_Window* window = SDL_CreateWindow("Chip8 Emulator", 
                                         SDL_WINDOWPOS_UNDEFINED, 
                                         SDL_WINDOWPOS_UNDEFINED, 
-                                        SCREEN_WIDTH, 
-                                        SCREEN_HEIGHT, 
+                                        SCREEN_WIDTH * SCALE_X, 
+                                        SCREEN_HEIGHT * SCALE_Y, 
                                         SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
 
     if (window == nullptr) {
@@ -48,17 +48,20 @@ int main(int argc, char *argv[]) {
         SDL_Quit();
         exit(EXIT_FAILURE);
     }
+    SDL_RenderSetScale(renderer, (float) SCALE_X, (float) SCALE_Y);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
-    SDL_UpdateWindowSurface(window);
 
     // TODO: CPU clockcycle debugging here
     
     while(user_chip8.is_running_flag) {
-
         execute_instruction(&user_chip8);
+
+        user_chip8.screen[15][15] = 1; // test
+        if (user_chip8.draw_flag) {
+            drawScreen(&user_chip8, renderer);
+        }
+
         SDL_Event event;
         process_user_input(&user_chip8);
         while (user_chip8.is_paused_flag && user_chip8.is_running_flag) {
