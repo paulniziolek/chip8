@@ -266,8 +266,24 @@ void set_Vx_rand(Chip8* sys) {
 // If the sprite is positioned so part of it is outside the coordinates of the display, it wraps around to the opposite side of the screen. 
 // See instruction 8xy3 for more information on XOR, and section 2.4, Display, for more information on the Chip-8 screen and sprites.
 void draw(Chip8* sys) {
-    // TODO
+    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    uint8_t y = (sys->current_op & 0x00F0) >> 4;
+    uint8_t n = (sys->current_op & 0x000F);
+    
+    int Vx = sys->V[x]%SCREEN_WIDTH;
+    int Vy = sys->V[y]%SCREEN_HEIGHT;
 
+    sys->V[0xF] = 0;
+    for (int i = 0; i < n && Vy + i < SCREEN_HEIGHT; i++) {
+        uint8_t sprite = sys->ram[sys->I + i];
+        for (int j = 0; j < 8 && Vx+j < SCREEN_WIDTH; j++) {
+            uint8_t bit = ((sprite << j) & 0x80) >> 7;
+            sys->screen[Vx+j][Vy+i] ^= bit;
+            if (!sys->screen[Vx+j][Vy+i] && bit) {
+                sys->V[0xF] = 1;
+            }
+        }
+    }
 }
 
 // Ex9E - SKP Vx
