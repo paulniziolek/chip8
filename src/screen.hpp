@@ -8,6 +8,7 @@
 #include "spdlog/spdlog.h"
 #include "chip8_t.hpp"
 
+void initSDL(SDL_Window** window, SDL_Renderer** renderer);
 void drawScreen(Chip8* sys, SDL_Renderer* renderer);
 
 #endif
