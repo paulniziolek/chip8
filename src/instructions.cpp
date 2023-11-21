@@ -254,7 +254,7 @@ void sne_Vx_Vy(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    if (sys->V[x] == sys->V[y]) {
+    if (sys->V[x] != sys->V[y]) {
         sys->PC += 2;
     }
 
