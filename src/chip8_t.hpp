@@ -55,7 +55,7 @@ public:
     uint8_t screen[SCREEN_WIDTH][SCREEN_HEIGHT];
 
     // keyboard
-    // ...
+    uint8_t keyboard[NUM_KEYS];
 
     // Status Flags
     uint8_t is_running_flag;
@@ -94,6 +94,11 @@ public:
             for (int x=0; x < SCREEN_WIDTH; x++) {
                 screen[x][y] = 0;
             }
+        }
+
+        // clear keyboard inputs
+        for (int i=0; i < 0xF; i++) {
+            keyboard[i] = 0;
         }
 
         is_running_flag = 1;
