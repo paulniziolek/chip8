@@ -5,10 +5,6 @@
 
 int main(int argc, char *argv[]) {
     Chip8 user_chip8;
-    argv[1] = "roms/ultimatetictactoe.ch8"; // temp, just for testing
-    argv[1] = "roms/heart_monitor.ch8";
-    argv[1] = "roms/test_opcode.ch8";
-    argv[2] = "log"; // temp, just for testing
 
     if (argv[2] != NULL && strcmp(argv[2], "log")==0) {
         spdlog::set_level(spdlog::level::debug);
