@@ -148,12 +148,10 @@ void execute_instruction(Chip8* sys) {
         switch(sys->current_op & 0xF0FF) {
         case 0xE09E:
             spdlog::debug("Running opcode 0xEx9E");
-            spdlog::error("OP 0xEx9E NOT IMPLEMENTED");
             skp(sys);
             break;
         case 0xE0A1:
             spdlog::debug("Running opcode 0xExA1");
-            spdlog::error("OP 0xExA1 NOT IMPLEMENTED");
             skpn(sys);
             break;
         default:
@@ -184,7 +182,6 @@ void execute_instruction(Chip8* sys) {
             break;
         case 0xF029:
             spdlog::debug("Running opcode 0xFx29");
-            spdlog::error("OP 0xFx29 NOT IMPLEMENTED");
             set_I_S(sys);
             break;
         case 0xF033:

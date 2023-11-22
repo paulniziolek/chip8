@@ -331,7 +331,11 @@ void draw(Chip8* sys) {
 //
 // Checks the keyboard, and if the key corresponding to the value of Vx is currently in the down position, PC is increased by 2.
 void skp(Chip8* sys) {
-    // TODO
+    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+
+    if (sys->keyboard[sys->V[x]]) {
+        sys->PC += 2;
+    }
 
     sys->PC += 2;
 }
@@ -341,7 +345,11 @@ void skp(Chip8* sys) {
 //
 // Checks the keyboard, and if the key corresponding to the value of Vx is currently in the up position, PC is increased by 2.
 void skpn(Chip8* sys) {
-    // TODO
+    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+
+    if (!sys->keyboard[sys->V[x]]) {
+        sys->PC += 2;
+    }
 
     sys->PC += 2;
 }
@@ -421,7 +429,9 @@ void add_I_Vx(Chip8* sys) {
 //
 // The value of I is set to the location for the hexadecimal sprite corresponding to the value of Vx. See section 2.4, Display, for more information on the Chip-8 hexadecimal font.
 void set_I_S(Chip8* sys) {
-    // TODO
+    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    
+    sys->I = (sys->V[x] * 0x5);
 
     sys->PC += 2;
 }
