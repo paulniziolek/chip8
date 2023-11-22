@@ -44,14 +44,17 @@ void execute_instruction(Chip8* sys) {
     
     switch(sys->current_op & 0xF000) {
     case 0x0000:
-        switch(sys->current_op & 0xFF0F) {
-        case 0x0000:
+        switch(sys->current_op & 0xFFFF) {
+        case 0x00E0:
             spdlog::debug("Running opcode 00E0");
             cls(sys);
             break;
-        default:
+        case 0x00EE:
             spdlog::debug("Running opcode 00EE");
             ret(sys);
+            break;
+        default:
+            spdlog::warn("Invalid opcode found for 0x0000: {}", sys->current_op);
         }
         break;
     case 0x1000:
@@ -125,33 +128,33 @@ void execute_instruction(Chip8* sys) {
         }
         break;
     case 0x9000:
-        spdlog::debug("Running opcode 0x9xy0");
+        spdlog::debug("Running opcode 9xy0");
         sne_Vx_Vy(sys);
         break;
     case 0xA000:
-        spdlog::debug("Running opcode 0xAnnn");
+        spdlog::debug("Running opcode Annn");
         set_i(sys);
         break;
     case 0xB000:
-        spdlog::debug("Running opcode 0xBnnn");
+        spdlog::debug("Running opcode Bnnn");
         jp_V0(sys);
         break;
     case 0xC000:
-        spdlog::debug("Running opcode 0xCxkk");
+        spdlog::debug("Running opcode Cxkk");
         set_Vx_rand(sys);
         break;
     case 0xD000:
-        spdlog::debug("Running opcode 0xDxyn");
+        spdlog::debug("Running opcode Dxyn");
         draw(sys);
         break;
     case 0xE000:
         switch(sys->current_op & 0xF0FF) {
         case 0xE09E:
-            spdlog::debug("Running opcode 0xEx9E");
+            spdlog::debug("Running opcode Ex9E");
             skp(sys);
             break;
         case 0xE0A1:
-            spdlog::debug("Running opcode 0xExA1");
+            spdlog::debug("Running opcode ExA1");
             skpn(sys);
             break;
         default:
@@ -161,43 +164,43 @@ void execute_instruction(Chip8* sys) {
     case 0xF000:
         switch(sys->current_op & 0xF0FF) {
         case 0xF007:
-            spdlog::debug("Running opcode 0xFx07");
+            spdlog::debug("Running opcode Fx07");
             ld_DT_Vx(sys);
             break;
         case 0xF00A:
-            spdlog::debug("Running opcode 0xFx0A");
+            spdlog::debug("Running opcode Fx0A");
             set_K_Vx(sys);
             break;
         case 0xF015:
-            spdlog::debug("Running opcode 0xFx15");
+            spdlog::debug("Running opcode Fx15");
             set_DT_Vx(sys);
             break;
         case 0xF018:
-            spdlog::debug("Running opcode 0xFx18");
+            spdlog::debug("Running opcode Fx18");
             set_ST_Vx(sys);
             break;
         case 0xF01E:
-            spdlog::debug("Running opcode 0xFx1E");
+            spdlog::debug("Running opcode Fx1E");
             add_I_Vx(sys);
             break;
         case 0xF029:
-            spdlog::debug("Running opcode 0xFx29");
+            spdlog::debug("Running opcode Fx29");
             set_I_S(sys);
             break;
         case 0xF033:
-            spdlog::debug("Running opcode 0xFx33");
+            spdlog::debug("Running opcode Fx33");
             ld_B_Vx(sys);
             break;
         case 0xF055:
-            spdlog::debug("Running opcode 0xFx55");
+            spdlog::debug("Running opcode Fx55");
             ld_I_Vk(sys);
             break;
         case 0xF065:
-            spdlog::debug("Running opcode 0xFx65");
+            spdlog::debug("Running opcode Fx65");
             ld_Vk_I(sys);
             break;
         default:
-            spdlog::warn("Invalid opcode found for 0xFxFF: {}", sys->current_op);
+            spdlog::warn("Invalid opcode found for FxFF: {}", sys->current_op);
         }
         break;
     }
