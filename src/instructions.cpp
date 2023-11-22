@@ -144,6 +144,7 @@ void set_Vx_or_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] | sys->V[y];
+    sys->V[0xF] = 0;
 
     sys->PC += 2;
 }
@@ -158,6 +159,7 @@ void set_Vx_and_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] & sys->V[y];
+    sys->V[0xF] = 0;
 
     sys->PC += 2;
 }
@@ -172,6 +174,7 @@ void set_Vx_xor_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     sys->V[x] = sys->V[x] ^ sys->V[y];
+    sys->V[0xF] = 0;
 
     sys->PC += 2;
 }
@@ -470,9 +473,9 @@ void ld_I_Vk(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->ram[sys->I + i] = sys->V[i];
     }
+    sys->I += x + 1;
 
     sys->PC += 2;
-    // Q: do i register change for this and next opcode?
 }
 
 // Fx65 - LD Vx, [I]
@@ -485,7 +488,7 @@ void ld_Vk_I(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->V[i] = sys->ram[sys->I + i];
     }
+    sys->I += x + 1;
 
     sys->PC += 2;
-    // Q: do i register change for this and prev opcode?
 }
