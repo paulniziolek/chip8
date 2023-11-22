@@ -125,7 +125,7 @@ void execute_instruction(Chip8* sys) {
         }
         break;
     case 0x9000:
-        spdlog::info("Running opcode 0x9xy0");
+        spdlog::debug("Running opcode 0x9xy0");
         sne_Vx_Vy(sys);
         break;
     case 0xA000:

@@ -7,6 +7,7 @@
 #include <time.h>
 
 #include "chip8_t.hpp"
+#include "spdlog/spdlog.h"
 
 // instructions
 void cls(Chip8* sys);               // 00E0
