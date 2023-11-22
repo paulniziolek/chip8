@@ -325,17 +325,18 @@ void draw(Chip8* sys) {
     int Vy = sys->V[y]%SCREEN_HEIGHT;
 
     sys->V[0xF] = 0;
-    for (int i = 0; i < n && Vy + i < SCREEN_HEIGHT; i++) {
+    for (int i = 0; i < n && (Vy+i)<SCREEN_HEIGHT; i++) {
         uint8_t sprite = sys->ram[sys->I + i];
-        for (int j = 0; j < 8 && Vx+j < SCREEN_WIDTH; j++) {
+        for (int j = 0; j < 8 && (Vx+j)<SCREEN_WIDTH; j++) {
             uint8_t bit = ((sprite << j) & 0x80) >> 7;
-            sys->screen[Vx+j][Vy+i] ^= bit;
-            if (!sys->screen[Vx+j][Vy+i] && bit) {
-                sys->V[0xF] = 1;
-            }
+            // wrapping disabled; by for loop conditions
+            int wrappedX = (Vx+j)%SCREEN_WIDTH;
+            int wrappedY = (Vy+i)%SCREEN_HEIGHT;
+            if (bit && sys->screen[wrappedX][wrappedY]) sys->V[0xF] = 1;
+            sys->screen[wrappedX][wrappedY] ^= bit;
         }
     }
-
+    
     sys->PC += 2;
 }
 
