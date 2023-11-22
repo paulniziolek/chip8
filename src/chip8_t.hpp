@@ -12,6 +12,9 @@
 #define SCREEN_HEIGHT 32
 
 #include <stdint.h>
+#include <iostream>
+#include <cstdio>
+#include "spdlog/spdlog.h"
 
 constexpr uint8_t fontset[FONTSET_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -62,8 +65,15 @@ public:
     uint8_t is_paused_flag;
     uint8_t draw_flag;
 
+    // misc
+    const char* rom_filepath;
+
     // Chip8 initializer
     Chip8() {
+        init_system();
+    }
+
+    void init_system() {
         // clear RAM
         for (int i=0; i < MEMORY_SIZE; i++) {
             ram[i] = 0;
@@ -104,6 +114,37 @@ public:
         is_running_flag = 1;
         is_paused_flag = 0;
         draw_flag = 1;
+    }
+    
+    // Must set rom_filepath before calling.
+    void load_rom() {
+        FILE* rom = fopen(rom_filepath, "rb");
+        if (rom == NULL) {
+            // log error
+            exit(EXIT_FAILURE);
+        }
+        
+        // get file size
+        fseek(rom, 0L, SEEK_END);
+        long int rom_size = ftell(rom);
+        long int max_rom_size = MEMORY_SIZE - PC_START;
+        fseek(rom, 0, SEEK_SET);
+
+        if (rom_size > max_rom_size) {
+            spdlog::error("ROM Size greater than allowed memory {}", max_rom_size);
+            exit(EXIT_FAILURE);
+        }
+        uint8_t* buffer = (uint8_t *)malloc(rom_size * sizeof(uint8_t));
+        
+        // TODO: check for unsuccessful read & error
+        fread(buffer, sizeof(uint8_t), rom_size, rom);
+
+        for (int i = 0; i < rom_size; i++) {
+            ram[i + PC_START] = buffer[i];
+        }
+        
+        fclose(rom);
+        free(buffer);
     }
 };
 

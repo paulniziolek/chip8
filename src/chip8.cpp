@@ -1,35 +1,5 @@
 #include "chip8.hpp"
 
-void load_rom(Chip8* sys, const char* rom_filepath) {
-    FILE* rom = fopen(rom_filepath, "rb");
-    if (rom == NULL) {
-        // log error
-        exit(EXIT_FAILURE);
-    }
-    
-    // get file size
-    fseek(rom, 0L, SEEK_END);
-    long int rom_size = ftell(rom);
-    long int max_rom_size = MEMORY_SIZE - PC_START;
-    fseek(rom, 0, SEEK_SET);
-
-    if (rom_size > max_rom_size) {
-        spdlog::error("ROM Size greater than allowed memory {}", max_rom_size);
-        exit(EXIT_FAILURE);
-    }
-    uint8_t* buffer = (uint8_t *)malloc(rom_size * sizeof(uint8_t));
-    
-    // TODO: check for unsuccessful read & error
-    fread(buffer, sizeof(uint8_t), rom_size, rom);
-
-    for (int i = 0; i < rom_size; i++) {
-        sys->ram[i + PC_START] = buffer[i];
-    }
-    
-    fclose(rom);
-    free(buffer);
-}
-
 void updateTimers(Chip8* sys) {
     if (sys->DT) {
         sys->DT -= 1;

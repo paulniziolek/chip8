@@ -17,7 +17,8 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    load_rom(&user_chip8, rompath);
+    user_chip8.rom_filepath = rompath;
+    user_chip8.load_rom();
     
     // TODO: Change resolution scaling based on config file
     SDL_Window* window;
