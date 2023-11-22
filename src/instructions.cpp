@@ -7,9 +7,9 @@
 // 00E0 - CLS
 // Clear the display.
 void cls(Chip8* sys) {
-    for (int i = 0; i < SCREEN_HEIGHT; i++) {
-        for (int j = 0; j < SCREEN_WIDTH; j++) {
-            sys->screen[i][j] = 0;
+    for (int y = 0; y < SCREEN_HEIGHT; y++) {
+        for (int x = 0; x < SCREEN_WIDTH; x++) {
+            sys->screen[x][y] = 0;
         }
     }
 
@@ -330,10 +330,10 @@ void draw(Chip8* sys) {
         for (int j = 0; j < 8 && (Vx+j)<SCREEN_WIDTH; j++) {
             uint8_t bit = ((sprite << j) & 0x80) >> 7;
             // wrapping disabled; by for loop conditions
-            int wrappedX = (Vx+j)%SCREEN_WIDTH;
-            int wrappedY = (Vy+i)%SCREEN_HEIGHT;
-            if (bit && sys->screen[wrappedX][wrappedY]) sys->V[0xF] = 1;
-            sys->screen[wrappedX][wrappedY] ^= bit;
+            int newX = (Vx+j);
+            int newY = (Vy+i);
+            if (bit && sys->screen[newX][newY]) sys->V[0xF] = 1;
+            sys->screen[newX][newY] ^= bit;
         }
     }
     
