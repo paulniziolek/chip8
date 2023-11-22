@@ -168,7 +168,6 @@ void execute_instruction(Chip8* sys) {
             break;
         case 0xF00A:
             spdlog::debug("Running opcode 0xFx0A");
-            spdlog::error("OP 0xFx0A NOT IMPLEMENTED");
             set_K_Vx(sys);
             break;
         case 0xF015:
