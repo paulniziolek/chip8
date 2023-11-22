@@ -27,9 +27,6 @@ int main(int argc, char *argv[]) {
     
 
     // CPU clock cycle configuration
-    const int CPU_CLOCK_SPEED = 500; 
-    const int FRAME_RATE = 60;
-    const int TIMER_RATE = 60;
     const std::chrono::milliseconds frameDuration(1000 / FRAME_RATE);
     const std::chrono::milliseconds clockDuration(1000 / CPU_CLOCK_SPEED);
     const std::chrono::milliseconds timeDuration(1000 / TIMER_RATE);
