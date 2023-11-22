@@ -30,6 +30,15 @@ void load_rom(Chip8* sys, const char* rom_filepath) {
     free(buffer);
 }
 
+void updateTimers(Chip8* sys) {
+    if (sys->DT) {
+        sys->DT -= 1;
+    }
+    if (sys->ST) {
+        sys->ST -= 1;
+    } 
+}
+
 void execute_instruction(Chip8* sys) {
     sys->current_op = (sys->ram[sys->PC] << 8) | (sys->ram[sys->PC+1]);
     

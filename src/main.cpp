@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
     Chip8 user_chip8;
     argv[1] = "roms/ultimatetictactoe.ch8"; // temp, just for testing
     argv[1] = "roms/heart_monitor.ch8";
+    argv[1] = "roms/test_opcode.ch8";
     argv[2] = "log"; // temp, just for testing
 
     if (argv[2] != NULL && strcmp(argv[2], "log")==0) {
@@ -26,20 +27,46 @@ int main(int argc, char *argv[]) {
     SDL_Window* window;
     SDL_Renderer* renderer;
     initSDL(&window, &renderer);
+    
 
-    // TODO: CPU clockcycle debugging here
+    // CPU clock cycle configuration
+    const int CPU_CLOCK_SPEED = 500; 
+    const int FRAME_RATE = 60;
+    const int TIMER_RATE = 60;
+    const std::chrono::milliseconds frameDuration(1000 / FRAME_RATE);
+    const std::chrono::milliseconds clockDuration(1000 / CPU_CLOCK_SPEED);
+    const std::chrono::milliseconds timeDuration(1000 / TIMER_RATE);
+
+    auto lastFrameTime = std::chrono::steady_clock::now();
+    auto lastClockTime = std::chrono::steady_clock::now();
+    auto lastTimerTime = std::chrono::steady_clock::now();
     
     while(user_chip8.is_running_flag) {
-        execute_instruction(&user_chip8);
+        auto currentTime = std::chrono::steady_clock::now();
 
-        if (user_chip8.draw_flag) {
-            drawScreen(&user_chip8, renderer);
+        // CPU Clock updates
+        if (currentTime - lastClockTime > clockDuration) {
+            execute_instruction(&user_chip8);
+            lastClockTime = currentTime;
+        }
+        
+        // Screen Clock updates
+        if (currentTime - lastFrameTime > frameDuration) {
+            if (user_chip8.draw_flag) {
+                drawScreen(&user_chip8, renderer);
+            }
+            lastFrameTime = currentTime;
         }
 
-        SDL_Event event;
         process_user_input(&user_chip8);
         while (user_chip8.is_paused_flag && user_chip8.is_running_flag) {
             process_user_input(&user_chip8);
+        }
+
+        // Timer Clock updates
+        if (currentTime - lastTimerTime > timeDuration) {
+            updateTimers(&user_chip8);
+            lastTimerTime = currentTime;
         }
 
     }
