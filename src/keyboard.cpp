@@ -30,12 +30,13 @@ void process_user_input(Chip8* sys) {
             sys->is_running_flag = false;
             sys->is_paused_flag = false;
             break;
-        
-        case SDLK_1 || SDLK_2 || SDLK_3 || SDLK_4 || SDLK_q 
-            || SDLK_w || SDLK_e || SDLK_r || SDLK_a || SDLK_s
-            || SDLK_d || SDLK_f || SDLK_z || SDLK_x || SDLK_c || SDLK_v:
+        case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_q: 
+            case SDLK_w: case SDLK_e: case SDLK_r: case SDLK_a: case SDLK_s:
+            case SDLK_d: case SDLK_f: case SDLK_z: case SDLK_x: case SDLK_c: case SDLK_v:
+            spdlog::info("Key {} was pressed or released!", mapKeys[event.key.keysym.sym]);
             if (event.key.type == SDL_KEYUP) sys->keyboard[mapKeys[event.key.keysym.sym]] = 0;
             if (event.key.type == SDL_KEYDOWN) sys->keyboard[mapKeys[event.key.keysym.sym]] = 1;
+            break;
         }
     }
 }

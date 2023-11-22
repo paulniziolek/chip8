@@ -343,7 +343,6 @@ void draw(Chip8* sys) {
 void skp(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
-    spdlog::info("Register V{} is set to {}", x, sys->V[x]);
     if (sys->keyboard[sys->V[x]]) {
         sys->PC += 2;
     }
