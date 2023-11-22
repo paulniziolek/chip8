@@ -186,8 +186,8 @@ void add_Vx_Vy(Chip8* sys) {
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
     uint16_t sum = sys->V[x] + sys->V[y];
+    sys->V[x] = sum & 0x00FF;
     sys->V[0xF] = sum > 255 ? 1 : 0;
-    sys->V[x] = sum & 0xFF;
 
     sys->PC += 2;
 }
@@ -200,8 +200,9 @@ void sub_Vx_Vy(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[0xF] = sys->V[x] > sys->V[y] ? 1 : 0;
+    uint8_t bit = sys->V[x] >= sys->V[y];
     sys->V[x] -= sys->V[y];
+    sys->V[0xF] = bit;
 
     sys->PC += 2;
 }
@@ -212,9 +213,13 @@ void sub_Vx_Vy(Chip8* sys) {
 // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
 void shr_Vx_Vy(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[0xF] = sys->V[x] & (1);
+    sys->V[x] = sys->V[y];
+
+    uint8_t bit = sys->V[x] & (1);
     sys->V[x] = sys->V[x] >> 1;
+    sys->V[0xF] = bit;
 
     sys->PC += 2;
 }
@@ -227,8 +232,9 @@ void subn_Vx_Vy(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
     uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[0xF] = (sys->V[y] > sys->V[x]) ? 1 : 0;
+    uint8_t bit = sys->V[y] >= sys->V[x];
     sys->V[x] = sys->V[y] - sys->V[x];
+    sys->V[0xF] = bit;
 
     sys->PC += 2;
 }
@@ -239,9 +245,13 @@ void subn_Vx_Vy(Chip8* sys) {
 // If the most-significant bit of Vx is 1, then VF is set to 1, otherwise to 0. Then Vx is multiplied by 2.
 void shl(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[0xF] = (sys->V[x] & 0x80) >> 7;
+    sys->V[x] = sys->V[y];
+
+    uint8_t bit = (sys->V[x] & 0x80) >> 7;
     sys->V[x] = (sys->V[x] << 1);
+    sys->V[0xF] = bit;
 
     sys->PC += 2;
 }
