@@ -216,13 +216,10 @@ void sub_Vx_Vy(Chip8* sys) {
 // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
 void shr_Vx_Vy(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
-    uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[x] = sys->V[y];
-
-    uint8_t bit = sys->V[x] & (1);
+    uint8_t ls_bit = sys->V[x] & (1);
     sys->V[x] = sys->V[x] >> 1;
-    sys->V[0xF] = bit;
+    sys->V[0xF] = ls_bit;
 
     sys->PC += 2;
 }
@@ -248,16 +245,15 @@ void subn_Vx_Vy(Chip8* sys) {
 // If the most-significant bit of Vx is 1, then VF is set to 1, otherwise to 0. Then Vx is multiplied by 2.
 void shl(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
-    uint8_t y = (sys->current_op & 0x00F0) >> 4;
 
-    sys->V[x] = sys->V[y];
-
-    uint8_t bit = (sys->V[x] & 0x80) >> 7;
-    sys->V[x] = (sys->V[x] << 1);
-    sys->V[0xF] = bit;
+    uint8_t vx = sys->V[x];
+    sys->V[x] = (uint8_t)(vx << 1);
+    sys->V[0xF] = (vx & 0x80) ? 1 : 0;
 
     sys->PC += 2;
 }
+
+
 
 // 9xy0 - SNE Vx, Vy
 // Skip next instruction if Vx != Vy.
@@ -474,7 +470,7 @@ void ld_I_Vk(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->ram[sys->I + i] = sys->V[i];
     }
-    sys->I += x + 1;
+    //sys->I += x + 1;
 
     sys->PC += 2;
 }
@@ -489,7 +485,7 @@ void ld_Vk_I(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->V[i] = sys->ram[sys->I + i];
     }
-    sys->I += x + 1;
+    //sys->I += x + 1;
 
     sys->PC += 2;
 }
