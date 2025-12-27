@@ -384,7 +384,7 @@ void set_K_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
     uint8_t wasKeyPressed = 0;
-    for (int i=0; i <= NUM_KEYS; i++) {
+    for (int i=0; i < NUM_KEYS; i++) {
         if (sys->keyboard[i]) {
             sys->V[x] = i;
             wasKeyPressed = 1;
