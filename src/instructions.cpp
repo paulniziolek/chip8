@@ -215,14 +215,18 @@ void sub_Vx_Vy(Chip8* sys) {
 //
 // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0. Then Vx is divided by 2.
 void shr_Vx_Vy(Chip8* sys) {
-    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    uint8_t x = (sys->current_op >> 8) & 0xF;
+    uint8_t y = (sys->current_op >> 4) & 0xF;
 
-    uint8_t ls_bit = sys->V[x] & (1);
-    sys->V[x] = sys->V[x] >> 1;
-    sys->V[0xF] = ls_bit;
+    uint8_t src  = sys->V[y];
+    uint8_t flag = src & 1;
+    uint8_t res  = src >> 1;
 
+    sys->V[x]   = res;
+    sys->V[0xF] = flag;
     sys->PC += 2;
 }
+
 
 // 8xy7 - SUBN Vx, Vy
 // Set Vx = Vy - Vx, set VF = NOT borrow.
@@ -243,15 +247,20 @@ void subn_Vx_Vy(Chip8* sys) {
 // Set Vx = Vx SHL 1.
 //
 // If the most-significant bit of Vx is 1, then VF is set to 1, otherwise to 0. Then Vx is multiplied by 2.
+// 8xyE - SHL Vx {, Vy}   (Shifting OFF / classic)
 void shl(Chip8* sys) {
-    uint8_t x = (sys->current_op & 0x0F00) >> 8;
+    uint8_t x = (sys->current_op >> 8) & 0xF;
+    uint8_t y = (sys->current_op >> 4) & 0xF;
 
-    uint8_t vx = sys->V[x];
-    sys->V[x] = (uint8_t)(vx << 1);
-    sys->V[0xF] = (vx & 0x80) ? 1 : 0;
+    uint8_t src  = sys->V[y];
+    uint8_t flag = (src >> 7) & 1;
+    uint8_t res  = (uint8_t)(src << 1);
 
+    sys->V[x]   = res;
+    sys->V[0xF] = flag;
     sys->PC += 2;
 }
+
 
 
 
