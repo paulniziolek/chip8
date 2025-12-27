@@ -1,4 +1,5 @@
 // testing main cpp file
+#include "beep.hpp"
 #include "chip8.hpp"
 #include "screen.hpp"
 #include "keyboard.hpp"
@@ -24,6 +25,11 @@ int main(int argc, char *argv[]) {
     SDL_Window* window;
     SDL_Renderer* renderer;
     initSDL(&window, &renderer);
+
+    Beeper beeper;
+    if (!init_beeper(&beeper, 440.0f)) {
+        spdlog::warn("Failed to init beeper audio: {}", SDL_GetError());
+    }
     
 
     // CPU clock cycle configuration
@@ -46,6 +52,7 @@ int main(int argc, char *argv[]) {
         // Timer Clock updates
         while (currentTime - lastTimerTime > timeDuration) {
             updateTimers(&user_chip8);
+            set_beep(&beeper, user_chip8.ST > 0);
             lastTimerTime += timeDuration;
         }
 
@@ -70,6 +77,7 @@ int main(int argc, char *argv[]) {
 
     }
     
+    shutdown_beeper(&beeper);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

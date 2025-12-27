@@ -20,7 +20,7 @@ include_directories(tests)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # exec
-add_executable(chip8 src/main.cpp src/chip8.cpp src/instructions.cpp src/screen.cpp src/keyboard.cpp)
+add_executable(chip8 src/main.cpp src/chip8.cpp src/instructions.cpp src/screen.cpp src/keyboard.cpp src/beep.cpp)
 #add_executable(tests tests/*)
 
 # link
