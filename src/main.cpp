@@ -38,9 +38,18 @@ int main(int argc, char *argv[]) {
     while(user_chip8.is_running_flag) {
         auto currentTime = std::chrono::steady_clock::now();
 
+        process_user_input(&user_chip8);
+        while (user_chip8.is_paused_flag && user_chip8.is_running_flag) {
+            process_user_input(&user_chip8);
+        }
+
         // CPU Clock updates
         if (currentTime - lastClockTime > clockDuration) {
-            execute_instruction(&user_chip8);
+            if (!user_chip8.waiting_for_key) {
+                // If we are waiting for a key, then we don't process instructions. 
+                // See Fx0A.
+                execute_instruction(&user_chip8);
+            }
             lastClockTime = currentTime;
         }
         
@@ -50,11 +59,6 @@ int main(int argc, char *argv[]) {
                 drawScreen(&user_chip8, renderer);
             }
             lastFrameTime = currentTime;
-        }
-
-        process_user_input(&user_chip8);
-        while (user_chip8.is_paused_flag && user_chip8.is_running_flag) {
-            process_user_input(&user_chip8);
         }
 
         // Timer Clock updates

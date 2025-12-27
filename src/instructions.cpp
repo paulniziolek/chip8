@@ -380,21 +380,18 @@ void ld_DT_Vx(Chip8* sys) {
 // Wait for a key press, store the value of the key in Vx.
 //
 // All execution stops until a key is pressed, then the value of that key is stored in Vx.
+//
+// Note: Instead of a polling implementation, this instruction is implemented
+// in an event-driven style. Thus, `wait_for_key` and `wait_reg` are flags
+// associated with this instruction. 
 void set_K_Vx(Chip8* sys) {
     uint8_t x = (sys->current_op & 0x0F00) >> 8;
 
-    uint8_t wasKeyPressed = 0;
-    for (int i=0; i < NUM_KEYS; i++) {
-        if (sys->keyboard[i]) {
-            sys->V[x] = i;
-            wasKeyPressed = 1;
-        }
-    }
-    if (!wasKeyPressed) {
-        // doesn't move PC, so this effectively will re-process current instruction
-        return;
-    }
+    sys->waiting_for_key = 1;
+    sys->waiting_reg = x;
 
+    // We are prematurely moving the PC up, but we halt further instruction
+    // processing by setting `waiting_for_key`.
     sys->PC += 2;
 }
 

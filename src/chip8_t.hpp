@@ -60,6 +60,10 @@ public:
     // keyboard
     uint8_t keyboard[NUM_KEYS];
 
+    // Status Flags associated with Fx0A.
+    uint8_t waiting_for_key;
+    uint8_t waiting_reg;
+
     // Status Flags
     uint8_t is_running_flag;
     uint8_t is_paused_flag;
@@ -114,6 +118,9 @@ public:
         is_running_flag = 1;
         is_paused_flag = 0;
         draw_flag = 1;
+        
+        waiting_for_key = 0;
+        waiting_reg = 0;
     }
     
     // Must set rom_filepath before calling.
