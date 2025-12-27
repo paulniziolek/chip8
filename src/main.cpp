@@ -43,28 +43,29 @@ int main(int argc, char *argv[]) {
             process_user_input(&user_chip8);
         }
 
+        // Timer Clock updates
+        while (currentTime - lastTimerTime > timeDuration) {
+            updateTimers(&user_chip8);
+            lastTimerTime += timeDuration;
+        }
+
         // CPU Clock updates
-        if (currentTime - lastClockTime > clockDuration) {
+        while (currentTime - lastClockTime > clockDuration) {
             if (!user_chip8.waiting_for_key) {
                 // If we are waiting for a key, then we don't process instructions. 
                 // See Fx0A.
                 execute_instruction(&user_chip8);
             }
-            lastClockTime = currentTime;
+            lastClockTime += clockDuration;
         }
         
         // Screen Clock updates
-        if (currentTime - lastFrameTime > frameDuration) {
+        while (currentTime - lastFrameTime > frameDuration) {
             if (user_chip8.draw_flag) {
                 drawScreen(&user_chip8, renderer);
+                user_chip8.draw_flag = 0;
             }
-            lastFrameTime = currentTime;
-        }
-
-        // Timer Clock updates
-        if (currentTime - lastTimerTime > timeDuration) {
-            updateTimers(&user_chip8);
-            lastTimerTime = currentTime;
+            lastFrameTime += frameDuration;
         }
 
     }

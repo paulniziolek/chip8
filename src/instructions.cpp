@@ -341,7 +341,7 @@ void draw(Chip8* sys) {
             sys->screen[newX][newY] ^= bit;
         }
     }
-    
+    sys->draw_flag = 1;
     sys->PC += 2;
 }
 
