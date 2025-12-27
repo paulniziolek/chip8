@@ -389,10 +389,6 @@ void set_K_Vx(Chip8* sys) {
 
     sys->waiting_for_key = 1;
     sys->waiting_reg = x;
-
-    // We are prematurely moving the PC up, but we halt further instruction
-    // processing by setting `waiting_for_key`.
-    sys->PC += 2;
 }
 
 // Fx15 - LD DT, Vx

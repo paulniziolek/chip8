@@ -8,9 +8,12 @@ void process_user_input(Chip8* sys) {
             spdlog::info("program closed, shutting off system");
             sys->is_running_flag = false;
             sys->is_paused_flag = false;
+            continue;
         }
         // Ignore key-repeats, as Chip8 considers buttons binary (down or up, not repeated).
         if (event.type == SDL_KEYDOWN && event.key.repeat) continue;
+
+        if (event.type != SDL_KEYDOWN && event.type != SDL_KEYUP) continue;
 
         switch (event.key.keysym.sym) {
         case SDLK_SPACE:
@@ -44,6 +47,7 @@ void process_user_input(Chip8* sys) {
                 if (sys->waiting_for_key) {
                     sys->waiting_for_key = 0;
                     sys->V[sys->waiting_reg] = mapKeys[event.key.keysym.sym];
+                    sys->PC += 2;
                 }
                 sys->keyboard[mapKeys[event.key.keysym.sym]] = 1;
             }
