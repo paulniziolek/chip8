@@ -472,7 +472,7 @@ void ld_I_Vk(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->ram[sys->I + i] = sys->V[i];
     }
-    //sys->I += x + 1;
+    sys->I += x + 1;
 
     sys->PC += 2;
 }
@@ -487,7 +487,7 @@ void ld_Vk_I(Chip8* sys) {
     for (int i = 0; i <= x; i++) {
         sys->V[i] = sys->ram[sys->I + i];
     }
-    //sys->I += x + 1;
+    sys->I += x + 1;
 
     sys->PC += 2;
 }
