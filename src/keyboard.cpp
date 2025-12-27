@@ -40,16 +40,23 @@ void process_user_input(Chip8* sys) {
         case SDLK_1: case SDLK_2: case SDLK_3: case SDLK_4: case SDLK_q: 
             case SDLK_w: case SDLK_e: case SDLK_r: case SDLK_a: case SDLK_s:
             case SDLK_d: case SDLK_f: case SDLK_z: case SDLK_x: case SDLK_c: case SDLK_v:
-            spdlog::info("Key {} was pressed or released!", mapKeys[event.key.keysym.sym]);
+            int key = mapKeys[event.key.keysym.sym];
 
-            if (event.type == SDL_KEYUP) sys->keyboard[mapKeys[event.key.keysym.sym]] = 0;
-            if (event.type == SDL_KEYDOWN) {
-                if (sys->waiting_for_key) {
+            if (event.type == SDL_KEYUP) {
+                spdlog::info("Key {} was released!", key);
+                if (sys->waiting_for_key == 2 && key == sys->V[sys->waiting_reg]) {
                     sys->waiting_for_key = 0;
-                    sys->V[sys->waiting_reg] = mapKeys[event.key.keysym.sym];
                     sys->PC += 2;
                 }
-                sys->keyboard[mapKeys[event.key.keysym.sym]] = 1;
+                sys->keyboard[key] = 0;
+            }
+            if (event.type == SDL_KEYDOWN) {
+                spdlog::info("Key {} was pressed!", key);
+                if (sys->waiting_for_key == 1) {
+                    sys->waiting_for_key = 2;
+                    sys->V[sys->waiting_reg] = key;
+                }
+                sys->keyboard[key] = 1;
             }
             break;
         }
